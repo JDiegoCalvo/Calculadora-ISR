@@ -1,0 +1,33 @@
+{
+	"background_color": "#3b5998",
+	"description" : "Calculadora ISR: Determina el ISR de cualquier régimen fiscal en México",
+	"display": "standalone",
+	"icons": [
+		{
+			"sizes": "192x192",
+			"src": "assets/img/android-chrome-192x192.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "512x512",
+			"src": "assets/img/android-chrome-512x512.png",
+			"type": "image/png"
+		},
+		{
+			"purpose" : "maskable",
+			"sizes": "512x512",
+			"src": "assets/img/android-chrome-512x512.png",
+			"type": "image/png"
+		}
+	],
+	"lang" : "es-MX",
+	"name": "Calculadora ISR",
+	"prefer_related_applications" : true,
+	"related_applications": [{
+		"platform": "web",
+		"url": "https://m.dctprime.com/calculadora_isr/v0.0"
+	}],
+	"short_name": "Calculadora ISR",
+	"start_url": "/calculadora_isr/v0.0/",
+	"theme_color": "#3b5998"
+}

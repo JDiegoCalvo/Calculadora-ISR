@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<title>Calculadora ISR</title>
+
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+
+		<!-- Manifest -->
+		<link rel="manifest" href="manifest.json" />
+	</head>
+	<body>
+		<div class="container my-3">
+			<h1 class="text-center">Calculadora ISR</h1>
+
+			<form>
+				<div class="mb-3">
+					<label class="form-label">Elige un Régimen Fiscal</label>
+					<select class="form-control" onchange="mostrar_calculadora_de_ISR( this );">
+						<option value="">Selecciona</option>
+						<option value="PFAEP_div">Personas Físicas con Actividad Empresarial y Profesional</option>
+						<option value="IF_div">Incorporación Fiscal</option>
+						<option value="Arrendamiento_div">Arrendamiento</option>
+						<option value="GDL_div">General de Ley</option>
+					</select>
+				</div>
+			</form>
+
+			<!-- PFAEP -->
+			<div class="d-none" id="PFAEP_div">
+				<form>
+					<div class="mb-3">
+						<label class="form-label">Elige un Ejercicio y un Mes</label>
+						<div class="input-group">
+							<select class="form-control" id="PFAEP_ejercicio" onchange="calcular_ISR_PFAEP();">
+								<option>2021</option>
+								<option>2020</option>
+								<option>2019</option>
+								<option>2018</option>
+								<option>2017</option>
+								<option>2016</option>
+								<option>2015</option>
+								<option>2014</option>
+							</select>
+							<select class="form-control" id="PFAEP_periodo" onchange="calcular_ISR_PFAEP();">
+								<option value="1">Enero</option>
+								<option value="2">Febrero</option>
+								<option value="3">Marzo</option>
+								<option value="4">Abril</option>
+								<option value="5">Mayo</option>
+								<option value="6">Junio</option>
+								<option value="7">Julio</option>
+								<option value="8">Agosto</option>
+								<option value="9">Septiembre</option>
+								<option value="10">Octubre</option>
+								<option value="11">Noviembre</option>
+								<option value="12">Diciembre</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				<table class="table table-sm table-bordered table-hover table-striped">
+					<tbody>
+						<tr>
+							<td>Ingresos de periodos anteriores</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_ingresos_de_periodos_anteriores" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Ingresos del periodo</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_ingresos_del_periodo" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Total de ingresos</td>
+							<td id="PFAEP_total_de_ingresos">0.00</td>
+						</tr>
+						<tr>
+							<td>Compras y gastos de periodos anteriores</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_compras_y_gastos_de_periodos_anteriores" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Compras y gastos del periodo</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_compras_y_gastos_del_periodo" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Total de compras y gastos</td>
+							<td id="PFAEP_total_de_compras_y_gastos">0.00</td>
+						</tr>
+						<tr>
+							<td>Deducción de inversiones de ejercicios anteriores</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_deduccion_de_inversiones_de_ejercicios_anteriores" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Participación de los trabajadores en las utilidades</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_participacion_de_los_trabajadores_en_las_utilidades" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Pérdidas fiscales de ejercicios anteriores</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_perdidas_fiscales_de_ejercicios_anteriores" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Base gravable del pago provisional</td>
+							<td id="PFAEP_base_gravable_del_pago_provisional">0.00</td>
+						</tr>
+						<tr>
+							<td>ISR causado</td>
+							<td id="PFAEP_ISR_causado">0.00</td>
+						</tr>
+						<tr>
+							<td>Pagos provisionales efectuados con anterioridad</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_pagos_provisionales_efectuados_con_anterioridad" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>ISR retenido de periodos anteriores</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_ISR_retenido_de_periodos_anteriores" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>ISR retenido del periodo</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="PFAEP_ISR_retenido_del_periodo" onkeyup="calcular_ISR_PFAEP();">
+							</td>
+						</tr>
+						<tr>
+							<td>Impuesto retenido</td>
+							<td id="PFAEP_impuesto_retenido">0.00</td>
+						</tr>
+						<tr>
+							<td class="fw-bold">ISR a cargo</td>
+							<td class="fw-bold" id="PFAEP_ISR_a_cargo">0.00</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- IF -->
+			<div class="d-none" id="IF_div">
+				<form>
+					<div class="mb-3">
+						<label class="form-label">Elige un Ejercicio, un Bimestre y un porcentaje de reducción de ISR</label>
+						<div class="input-group">
+							<select class="form-control" id="IF_ejercicio" onchange="calcular_ISR_IF();">
+								<option>2021</option>
+								<option>2020</option>
+								<option>2019</option>
+								<option>2018</option>
+								<option>2017</option>
+								<option>2016</option>
+								<option>2015</option>
+								<option>2014</option>
+							</select>
+							<select class="form-control" id="IF_periodo" onchange="calcular_ISR_IF();">
+								<option value="1">Enero - Febrero</option>
+								<option value="2">Marzo - Abril</option>
+								<option value="3">Mayo - Junio</option>
+								<option value="4">Julio - Agosto</option>
+								<option value="5">Septiembre - Octubre</option>
+								<option value="6">Noviembre - Diciembre</option>
+							</select>
+							<select class="form-control" id="porcentaje_de_reduccion_de_ISR_select" onchange="calcular_ISR_IF();">
+								<option value="1.00">100%</option>
+								<option value="0.90">90%</option>
+								<option value="0.80">80%</option>
+								<option value="0.70">70%</option>
+								<option value="0.60">60%</option>
+								<option value="0.50">50%</option>
+								<option value="0.40">40%</option>
+								<option value="0.30">30%</option>
+								<option value="0.20">20%</option>
+								<option value="0.10">10%</option>
+								<option value="0.00">0%</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				<table class="table table-sm table-bordered table-hover table-striped">
+					<tbody>
+						<tr>
+							<td>Ingresos cobrados</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="IF_ingresos_cobrados" onkeyup="calcular_ISR_IF();">
+							</td>
+						</tr>
+						<tr>
+							<td>Compras y gastos pagados</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="IF_compras_y_gastos_pagados" onkeyup="calcular_ISR_IF();">
+							</td>
+						</tr>
+						<tr>
+							<td>Participación de utilidades (PTU)</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="IF_participacion_de_utilidades" onkeyup="calcular_ISR_IF();">
+							</td>
+						</tr>
+						<tr>
+							<td>Diferencia de gastos mayores a ingresos de periodos anteriores</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="IF_diferencia" onkeyup="calcular_ISR_IF();">
+							</td>
+						</tr>
+						<tr>
+							<td>Utilidad</td>
+							<td id="IF_utilidad">0.00</td>
+						</tr>
+						<tr>
+							<td>ISR determinado</td>
+							<td id="IF_ISR_determinado">0.00</td>
+						</tr>
+						<tr>
+							<td>Reducción</td>
+							<td id="IF_deduccion">0.00</td>
+						</tr>
+						<tr>
+							<td>ISR a pagar</td>
+							<td id="IF_ISR_a_pagar">0.00</td>
+						</tr>
+						<tr>
+							<td>ISR retenido</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="IF_ISR_retenido" onkeyup="calcular_ISR_IF();">
+							</td>
+						</tr>
+						<tr>
+							<td>Subsidio para el empleo</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="IF_subsidio" onkeyup="calcular_ISR_IF();">
+							</td>
+						</tr>
+						<tr>
+							<td class="fw-bold">Cantidad a pagar</td>
+							<td class="fw-bold" id="IF_cantidad_a_pagar">0.00</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Arrendamiento -->
+			<div class="d-none" id="Arrendamiento_div">
+				<form>
+					<div class="mb-3">
+						<label class="form-label">Elige un Ejercicio y un Mes</label>
+						<div class="input-group">
+							<select class="form-control" id="A_ejercicio" onchange="calcular_ISR_Arrendamiento();">
+								<option>2021</option>
+								<option>2020</option>
+								<option>2019</option>
+								<option>2018</option>
+								<option>2017</option>
+								<option>2016</option>
+								<option>2015</option>
+								<option>2014</option>
+							</select>
+							<select class="form-control" id="A_periodo" onchange="calcular_ISR_Arrendamiento();">
+								<option value="1">Enero</option>
+								<option value="1">Febrero</option>
+								<option value="1">Marzo</option>
+								<option value="1">Abril</option>
+								<option value="1">Mayo</option>
+								<option value="1">Junio</option>
+								<option value="1">Julio</option>
+								<option value="1">Agosto</option>
+								<option value="1">Septiembre</option>
+								<option value="1">Octubre</option>
+								<option value="1">Noviembre</option>
+								<option value="1">Diciembre</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				<table class="table table-sm table-bordered table-hover table-striped">
+					<tbody>
+						<tr>
+							<td>Total de ingresos</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="A_total_de_ingresos" onkeyup="calcular_ISR_Arrendamiento();">
+							</td>
+						</tr>
+						<tr>
+							<td>Deducciones autorizadas</td>
+							<td id="A_deducciones_autorizadas">0.00</td>
+						</tr>
+						<tr>
+							<td>Impuesto predial</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="A_impuesto_predial" onkeyup="calcular_ISR_Arrendamiento();">
+							</td>
+						</tr>
+						<tr>
+							<td>Total de deducciones autorizadas</td>
+							<td id="A_total_de_deducciones_autorizadas">0.00</td>
+						</tr>
+						<tr>
+							<td>Base gravable del pago provisional</td>
+							<td id="A_base_gravable_del_pago_provisional">0.00</td>
+						</tr>
+						<tr>
+							<td>ISR causado</td>
+							<td id="A_ISR_causado">0.00</td>
+						</tr>
+						<tr>
+							<td>Impuesto retenido</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="A_impuesto_retenido" onkeyup="calcular_ISR_Arrendamiento();">
+							</td>
+						</tr>
+						<tr>
+							<td class="fw-bold">ISR a cargo</td>
+							<td class="fw-bold" id="A_ISR_a_cargo">0.00</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- GDL -->
+			<div class="d-none" id="GDL_div">
+				<form>
+					<div class="mb-3">
+						<label class="form-label">Elige un Ejercicio y un Mes</label>
+						<div class="input-group">
+							<select class="form-control" id="GDL_ejercicio" onchange="calcular_ISR_GDL();">
+								<option>2021</option>
+								<option>2020</option>
+								<option>2019</option>
+								<option>2018</option>
+								<option>2017</option>
+								<option>2016</option>
+								<option>2015</option>
+								<option>2014</option>
+							</select>
+							<select class="form-control" id="GDL_periodo" onchange="calcular_ISR_GDL();">
+								<option value="1">Enero</option>
+								<option value="2">Febrero</option>
+								<option value="3">Marzo</option>
+								<option value="4">Abril</option>
+								<option value="5">Mayo</option>
+								<option value="6">Junio</option>
+								<option value="7">Julio</option>
+								<option value="8">Agosto</option>
+								<option value="9">Septiembre</option>
+								<option value="10">Octubre</option>
+								<option value="11">Noviembre</option>
+								<option value="12">Diciembre</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				<table class="table table-sm table-bordered table-hover table-striped">
+					<tbody>
+						<tr>
+							<td>Suma de ingresos acumulables de meses anteriores del ejercicio</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_ingresos_de_periodos_anteriores" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td>Ingresos nominales del mes que declara</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_ingresos_del_periodo" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td>Total de ingresos nominales</td>
+							<td id="GDL_total_de_ingresos_nominales">0.00</td>
+						</tr>
+						<tr>
+							<td>Coeficiente de utilidad</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_coeficiente_de_utilidad" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td>Utilidad fiscal para pago provisonal</td>
+							<td id="GDL_utilidad_fiscal_para_pago_provisional">0.00</td>
+						</tr>
+						<tr>
+							<td>Inventario acumulable</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_inventario_acumulable" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td>Utilidad fiscal adicionada para el pago provisonal</td>
+							<td id="GDL_utilidad_fiscal_adicionada">0.00</td>
+						</tr>
+						<tr>
+							<td>Participación de los trabajadores en las utilidades</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_PTU" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+
+						<tr>
+							<td>Anticipos y rendimientos distribuidos en el periodo</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_anticipos" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td>Pérdidas fiscales de ejercicios anteriores pendientes de aplicar</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_perdidas_fiscales" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td>Base gravable del pago provisional</td>
+							<td id="GDL_base_gravable_del_pago_provisional">0.00</td>
+						</tr>
+						<tr>
+							<td>ISR causado</td>
+							<td id="GDL_ISR_causado">0.00</td>
+						</tr>
+						<tr>
+							<td>Pagos provisionales efectuados con anterioridad</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_pagos_provisionales_de_periodos_anteriores" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td>Impuesto retenido</td>
+							<td>
+								<input type="number" min="0.01" step="0.01" class="form-control form-control-sm" id="GDL_impuesto_retenido" onkeyup="calcular_ISR_GDL();">
+							</td>
+						</tr>
+						<tr>
+							<td class="fw-bold">Impuesto a cargo</td>
+							<td class="fw-bold" id="GDL_impuesto_a_cargo">0.00</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<p class="text-center"><a href="https://dctprime.com/servicios/contabilidad/" target="_blank" class="text-secondary fw-lighter text-decoration-none">© DCT Prime 2021</a></p>
+		</div>
+
+		<script src="assets/js/numeral.min.js"></script>
+
+		<script src="assets/js/app.min.js"></script>
+	</body>
+</html>
